@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import numpy as np
 import pandas as pd
 
 df = pd.read_csv('olympics.csv', index_col=0, skiprows=1)
@@ -21,6 +20,22 @@ df['ID'] = names_ids.str[0].str[:3] # the [1] element is the abbreviation or ID 
 df = df.drop('Totals')
 
 
+def answer_four():
+    df['Points'] = df['Gold.2'] * 3 + df['Silver.2'] * 2 + df['Bronze.2']
+    return df['Points']
+
+
+def answer_three():
+    df_filter = df[(df['Gold'] > 0) & (df['Gold.1'] > 0)].copy()
+    df_filter['ratio'] = (df_filter['Gold'] - df_filter['Gold.1']) / (df_filter['Gold'] + df_filter['Gold.1'])
+    return df_filter[df_filter['ratio'] == df_filter['ratio'].max()].index[0]
+
+
+def answer_two():
+    df['GoldDiff'] = abs(df['Gold'] - df['Gold.1'])
+    return df[df['GoldDiff'] == df['GoldDiff'].max()].index[0]
+
+
 def answer_one():
     return df[df['Gold'] == df['Gold'].max()].index[0]
 
@@ -29,4 +44,4 @@ def answer_zero():
     return df.iloc[0]
 
 
-print answer_one()
+print answer_four()
